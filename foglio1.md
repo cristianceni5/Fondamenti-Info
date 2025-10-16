@@ -295,11 +295,26 @@ float X[15]; //X è un array di 15 variabili float
 int A[5][3]; //A è un array di 5 array di 3 variabili int, A matrice 5x3
 ```
 
-Array semplice
+### Array semplice
+
 ![array memoria](https://www.diag.uniroma1.it/~liberato/struct/array/statico2.gif)
 
-Array complesso
+### Array complesso
+
 ![array memoria](https://media.geeksforgeeks.org/wp-content/uploads/20220531171048/gfgpicmem-660x344.png)
 
-Albero sintattico
+### Albero sintattico
+
 ![albero array](alberoarray.png)
+
+Esempio
+(occupa 24 byte in memoria) 3 x 4 B x 2
+
+``` c
+float **Z[3][2]; // Z è un array di 3 array di 2
+//Doppi puntatori a float
+```
+
+``` bnf
+<decl> ::= ... | (<decl>)
+```
