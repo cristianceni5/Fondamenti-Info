@@ -1,6 +1,8 @@
-# Fondamenti
- 
+# Fondamenti di Informatica
+
 ![Surry](https://staticfanpage.akamaized.net/wp-content/uploads/sites/34/2025/02/Salvatore-Cinquegrana-1200x675.jpg)
+
+---
 
 09/10/25
 
@@ -96,7 +98,7 @@ unsigned < int
 <op2> ::= < | <= | == | != | >= | >
 ```
 
-in c non abbiamo il booleano, il risultato dell'applicazione di un operatore relazionale è 1 per vero e 0 per falso
+in c non abbiamo il booleano, il risultato dell'applicazione di un operatore relazionale è 1 per vero e 0 per falso.
 
 ``` c
 int a;
@@ -137,7 +139,7 @@ c = a > b &&! a; //a > b è vero
 ### Op logico &&
 
 viene eseguita expr1 e vengono applicati i suoi side-effect (se presenti).
-Se il valore restituito da expr 1 è vero (=! da 0) allora è eseguita anche expr2. Altrimenti se expr1 è falsa, expr2 non è eseguita. Assimmetria nota come "short circuit"
+Se il valore restituito da expr 1 è vero (=! da 0) allora è eseguita anche expr2. Altrimenti se expr1 è falsa, expr2 non è eseguita. Assimmetria nota come "short circuit".
 
 ``` c
 int a;
@@ -152,7 +154,7 @@ c = a < b && a++; //Se a <! di b non viene eseguita a++.
 
 ### Op logico ||
 
-viene eseguita expr1 e sono applicati i suoi side-effect (se presenti). Se il valore restituito da expr1 è vero (=! 0) expr2 non viene eseguita (il risultato dell'Or è comunque vero)
+viene eseguita expr1 e sono applicati i suoi side-effect (se presenti). Se il valore restituito da expr1 è vero (=! 0) expr2 non viene eseguita (il risultato dell'Or è comunque vero).
 
 ---
 
@@ -182,7 +184,7 @@ viene eseguita expr1 e sono applicati i suoi side-effect (se presenti). Se il va
 
 ## Puntatori
 
-sono degli interi a 32 bit, posso puntare a int, float ma anche void
+sono degli interi a 32 bit, posso puntare a int, float ma anche void.
 
 ``` bnf
 <declaration> ::= <type><decl>
@@ -196,9 +198,9 @@ int ** ptr2 //Vuole indirizzo di un puntatore
 
 ### Uso dei puntatori
 
-Sul puntatore è possibile fare l'operazione di <b>dereferenziazione</b>
+Sul puntatore è possibile fare l'operazione di **dereferenziazione**
 
-Mi permette di usare un puntatore per accedere ad una variabile nella memoria
+Mi permette di usare un puntatore per accedere ad una variabile nella memoria.
 
 ``` bnf
 <var> ::= <identifier> | (<var>) | *<expr> //Espressione che restituisce un indirizzo
@@ -206,7 +208,7 @@ Mi permette di usare un puntatore per accedere ad una variabile nella memoria
 
 ### Operatore indirizzo
 
-Assegnare ad un puntatore un'altra variabile
+Assegnare ad un puntatore un'altra variabile.
 
 ``` bnf
 <expr> ::= ... | &<var>
@@ -256,9 +258,9 @@ else
 //Il tipo conta
 ```
 
-* (int*) cast del puntatore. Puntatore a void è trasformato in puntatore a int
+* (int*) cast del puntatore. Puntatore a void è trasformato in puntatore a int.
 
-* *dereferenzia l'indirzzo di una var intera
+* *dereferenzia l'indirzzo di una var intera.
 
 ### Cast di un puntatore
 
@@ -267,18 +269,18 @@ else
 <cast_type> ::= <type> | <cast_type>*
 ```
 
-Rendere (int*) legale nella nostra grammatica
+Rendere (int*) legale nella nostra grammatica.
 
 ---
 
 ## Array
 
-Un array è un insieme di variabili dello stesso tipo
+Un array è un insieme di variabili dello stesso tipo.
 
-* le variabili hanno lo stesso nome
-* sono indicate dal nome collettivo e un indice numerico
+* le variabili hanno lo stesso nome.
+* sono indicate dal nome collettivo e un indice numerico.
 
-Le variabili che compongono l'insieme sono allocate in posizioni contigue della memoria
+Le variabili che compongono l'insieme sono allocate in posizioni contigue della memoria.
 
 ### Dichiarazione
 
@@ -295,13 +297,19 @@ float X[15]; //X è un array di 15 variabili float
 int A[5][3]; //A è un array di 5 array di 3 variabili int, A matrice 5x3
 ```
 
+---
+
 ### Array semplice
 
 ![array memoria](https://www.diag.uniroma1.it/~liberato/struct/array/statico2.gif)
 
+---
+
 ### Array complesso
 
 ![array memoria](https://media.geeksforgeeks.org/wp-content/uploads/20220531171048/gfgpicmem-660x344.png)
+
+---
 
 ### Albero sintattico
 
@@ -318,3 +326,128 @@ float **Z[3][2]; // Z è un array di 3 array di 2
 ``` bnf
 <decl> ::= ... | (<decl>)
 ```
+
+---
+
+### Riferimento alle variabili di un array
+
+``` bnf
+<var> ::= ... | <expr1> [<expr2>]
+```
+
+è equivalente alla seguente scrittura *(expr1 + expr2) aritmetica dei puntatori.
+
+* expr1 restituisce un indirizzo
+* expr2 restituisce un intero
+
+il nome di un array se usato in una espressione restituisce il valore l'indirizzo di inizio in memoria dell'array.
+
+* expr1 può essere il nome dell'array
+
+![ptr array](ptrarray.png)
+
+Puntatore ad un array
+
+---
+
+### Array multidimensionale
+
+Per risolvere problemi con matrici
+
+Esempio: Calcolo del prodotto fra A e B
+
+![matrici](matrici.png)
+
+formano una matrice C 3x4.
+
+Proviamo con il codice
+
+``` c
+int A[3][2];
+int B[2][4];
+int C[3][4];
+
+int i; //Indice riga
+int j; //Indice colonna
+int k; //k per sommatoria
+
+for(i = 0; i < 3; i++)
+{
+    for(j = 0; j < 4; j++)
+    {
+        C[i][j] = 0;
+
+        for(k = 0; k < 2; k++)
+        {
+            C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+}
+
+//Stampa C
+```
+
+---
+
+## Grammatica delle istruzioni
+
+Dirigono il flusso di esecuzione
+
+``` bnf
+<statement> ::= <expr>; | <statement1><statement2> | {statement} //Graffe del C (compound)
+```
+
+### Semantica istruzioni
+
+Viene eseguita l'espressione ed i suoi eventuali side-effects spmp applicati. Il **controllo** del **flusso** è trasferito all'istruzione successiva.
+
+### Istruzione condizionale
+
+``` c
+if(expr_guardia)
+{
+    //Ti puzza l'ano
+}
+else
+{
+    //Ti puzza il culo
+}
+```
+
+2 casi:
+
+* solo if (solo una condizione)
+
+``` bnf
+<statement> ::= ... | if(<expr_guardia>)<statement>
+```
+
+* anche else
+
+``` bnf
+<statement> ::= ... | if(<expr_guardia>)<statement1> else<statement2>
+```
+
+Viene calcolata l'espressione di guardia se è vera (diverso da 0) viene eseguito:
+
+``` bnf
+<statement1>
+```
+
+altrimenti se presente else viene eseguita
+
+``` bnf
+<statement2>
+```
+
+### Istruzioni iterative
+
+``` bnf
+<statement> ::= ... | for(<expr_int>; <expr_guard>; <expr_inc>)<statement> | while(<expr_guard>)<statement> | do(<statement>) while(<expr_guard>)
+```
+
+### for()
+
+### Semantica
+
+Viene eseguita l'espressione di inizializzazione (expr_int) viene eseguita l'espressione di guardia se l'espressione di guardia è **vera** (≠ 0) allora è eseguito lo statement1 e a seguire l'espressione di incremento. Il controllo del flusso è poi ritornato all'espressione di guardia. Se l'espressione di guardia è falsa (== 0) il controllo è trasferito all'istruzione che segue statement1
