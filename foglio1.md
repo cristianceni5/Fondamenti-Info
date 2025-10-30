@@ -389,6 +389,8 @@ for(i = 0; i < 3; i++)
 
 ---
 
+20/10/25
+
 ## Grammatica delle istruzioni
 
 Dirigono il flusso di esecuzione
@@ -448,6 +450,262 @@ altrimenti se presente else viene eseguita
 
 ### for()
 
-### Semantica
+### Semantica for
 
-Viene eseguita l'espressione di inizializzazione (expr_int) viene eseguita l'espressione di guardia se l'espressione di guardia è **vera** (≠ 0) allora è eseguito lo statement1 e a seguire l'espressione di incremento. Il controllo del flusso è poi ritornato all'espressione di guardia. Se l'espressione di guardia è falsa (== 0) il controllo è trasferito all'istruzione che segue statement1
+Viene eseguita l'espressione di inizializzazione (expr_int) viene eseguita l'espressione di guardia se l'espressione di guardia è **vera** (≠ 0) allora è eseguito lo statement1 e a seguire l'espressione di incremento. Il controllo del flusso è poi ritornato all'espressione di guardia. Se l'espressione di guardia è falsa (== 0) il controllo è trasferito all'istruzione che segue statement1.
+
+---
+
+23/10/25
+
+### Istruzione di salto
+
+``` bnf
+<statement> ::= goto <label>; | break; | continue; | switch(<expr>){
+    {case <const>: <statement>}
+    [default: <statement>]
+} | return[<expr>];
+```
+
+### goto
+
+* **goto** permette di trasferire incondizionatamente il flusso di esecuzione del programma a un'altra istruzione, identificata da un'etichetta. Sebbene sia una funzionalità del linguaggio, il suo uso è fortemente sconsigliato dalla comunità dei programmatori.
+
+```c
+// ... codice
+if (condizione) {
+    goto etichetta;
+}
+// ... codice che viene saltato
+etichetta:
+// ... codice che viene eseguito dopo il salto
+```
+
+---
+
+### break
+
+* **break** serve per uscire immediatamente da un ciclo (for, while, do-while) o da un'istruzione switch. Quando l'esecuzione del programma incontra un break, il controllo viene trasferito alla prima istruzione che segue il blocco di codice in cui si trova il break
+
+---
+
+### continue
+
+* L'istruzione **continue** nel linguaggio C serve a saltare l'iterazione corrente di un ciclo e passare immediatamente a quella successiva. A differenza dell'istruzione break, che termina l'intero ciclo, continue interrompe solo l'esecuzione del blocco di codice rimanente nell'iterazione in corso e riprende con l'iterazione successiva.
+
+---
+
+### switch
+
+* **switch** L'istruzione switch nel linguaggio C è una struttura di controllo che permette di eseguire diversi blocchi di codice in base al valore di una singola variabile o espressione. È un'alternativa più leggibile e pulita a una lunga serie di istruzioni if-else if.
+
+```c
+switch (espressione) {
+    case valore1:
+        // blocco di codice da eseguire se l'espressione è uguale a valore1
+        break;
+    case valore2:
+        // blocco di codice da eseguire se l'espressione è uguale a valore2
+        break;
+    // ... altri case ...
+    default:
+        // blocco di codice da eseguire se nessun case corrisponde
+}
+```
+
+## Funzioni
+
+è un costrutto di controllo del flusso di esecuzione.
+È una sorta di **goto** con ritorno. Trasferisce il controllo del flusso di esecuzione ad un frammento di codice e lo riottiene indietro al termine dell'esecuzione.
+
+L'uso delle funzioni offre diversi vantaggi:
+
+* Modularità: Permette di suddividere un programma complesso in parti più piccole e gestibili.
+
+* Riutilizzo del codice: Consente di scrivere un blocco di codice una sola volta e di richiamarlo più volte.
+
+* Chiarezza: Rende il codice più leggibile e facile da capire, in quanto ogni funzione ha un nome che ne descrive lo scopo.
+
+![funzioni](<Screenshot 2025-10-23 alle 09.14.12.png>)
+
+```c
+// 1. Prototipo della funzione
+// Dichiara una funzione che accetta due interi e restituisce un intero.
+int somma_numeri(int a, int b);
+
+int main() {
+    int risultato;
+    int numero1 = 10;
+    int numero2 = 5;
+
+    // 3. Chiamata alla funzione
+    risultato = somma_numeri(numero1, numero2);
+
+    printf("La somma è: %d\n", risultato);
+    return 0;
+}
+
+// 2. Definizione della funzione
+// Implementa il codice per sommare due interi.
+int somma_numeri(int a, int b) {
+    int somma;
+    somma = a + b;
+    return somma;
+}
+```
+
+---
+
+30/10/25
+
+## Grammatica del C
+
+```bnf
+<program>::= { <declaration> | <function_definition> | <directive> | typedef <type> <identifier>; }
+```
+
+* In linguaggio C, la parola chiave typedef (abbreviazione di "type definition", in italiano "definizione di tipo") serve a creare un sinonimo o un alias per un tipo di dato già esistente. L'obiettivo principale è rendere il codice più leggibile, portabile e semplice da gestire.
+
+```c
+typedef unsigned short int boolean;
+boolean a;
+```
+
+typedef può essere usato per dare un nome più significativo a un tipo di dato base, come int, char o float
+
+Esempi:
+
+```c
+#define TRUE 1
+#define FALSE 0
+
+typedef unsigned short int boolean;
+
+int main()
+{
+    boolean a;
+    a = TRUE;
+}
+```
+
+## Nota sulle funzioni
+
+### Variabili statiche
+
+Sono variabili dichiarate all'interno delle funzioni (modificatore **static**). Sono inizializzate una sola volta e mantengono il loro valore nelle chiamate successive.
+Allocate nel segmento dati **non** nello stack
+
+```c
+void f(int a)
+{
+    static int count;
+    count = 0;
+
+    count ++;
+    //Conta quante volte viene chiamata la funzione
+}
+```
+
+---
+
+## Dati strutturati
+
+Un dato strutturato è un insieme di variabili anche di tipo **diverso** a cui è possibile far riferimento attraverso un **nome collettivo** ed un indice **simbolico**. Le variabili possono essere allocate in posizioni di memoria non contigue.
+
+### Grammatica
+
+* definizione
+
+* dichiarazione
+
+* riferimento
+
+### Definizione
+
+```bnf
+<struct_definition> ::= struct <identifier> {{<type><decl>;}};
+```
+
+```c
+struct Point
+{
+    float x;
+    float y;
+};
+```
+
+### Dichiarazione
+
+```bnf
+<type> ::= ... | struct <identifier>
+```
+
+```c
+struct Point pt1; //Dichiare una va di tipo struct Point
+struct Point pt2;
+struct Point points[10]; //Array di tipo struct Point
+struct Point *ptr; //Puntatore ad una var struct Point
+```
+
+posso pure:
+
+```c
+typedef struct Point Punto; //Punto è un alias per struct Point
+```
+
+### Riferimento/Uso
+
+```c
+struct Persona 
+{
+    char nome[50];
+    int eta;
+    float stipendio;
+} persona1, persona2;
+
+persona1.eta = 30;
+printf("Età: %d\n", persona1.eta);
+```
+
+![funzioni](<Screenshot 2025-10-30 alle 09.28.15.png>)
+
+---
+
+## Esercizi
+
+### (es) riferimento a variabile
+
+```c
+(A[count].ptr) -> codice
+```
+
+### Definizioni e definizioni
+
+```c
+struct record 
+{
+    struct noninativo *ptr;
+};
+
+struct nominativo
+{
+    int codice;
+};
+```
+
+```c
+struct record A[128];
+int count;
+```
+
+### Quesiti
+
+* correttezza sintattica con albero sint.
+
+* semantica.
+
+* produzioni della grammatica coinvolte.
+
+### Albero sintattico ex
+
+![albero ex1 surry](<Screenshot 2025-10-30 alle 10.00.44.png>)
