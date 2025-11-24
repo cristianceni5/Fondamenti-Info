@@ -709,3 +709,290 @@ int count;
 ### Albero sintattico ex
 
 ![albero ex1 surry](<Screenshot 2025-10-30 alle 10.00.44.png>)
+
+---
+
+13/11/25
+
+## Lista sequenziale
+
+![lista](<Screenshot 2025-11-13 alle 08.35.27.png>)
+
+![alt text](<Screenshot 2025-11-13 alle 09.06.30.png>)
+
+```c
+struct list{
+    int *buffer;
+    int size;
+    int head;
+    int tail;
+}
+```
+
+* **lista vuota** se tail = head
+* **lista piena** se tail +1 = head
+
+### Cancellazione in coda
+
+```c
+boolean suf_consume(struct list *ptr, int *value){
+    if(ptr->head != ptr->tail)
+    {
+        ptr->tail = (ptr->tail-1 + ptr->size)%ptr->size;
+
+        *value = ptr->buffer[ptr->tail];
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+```
+
+### Operazione di ricerca
+
+effettua la ricerca di un elemento finché non viene trovato
+
+![alt text](<Screenshot 2025-11-13 alle 09.05.28.png>)
+
+
+```c
+boolean search(struct list *ptr, int target)
+{
+    int position;
+    boolean found;
+    position = ptr->head;
+    found = FALSE;
+
+    while(position != ptr->tail && found == FALSE)
+    {
+        if(ptr->buffer[position] == target)
+        {
+            found = TRUE;
+        }
+        else
+        {
+            position = (position +1)%ptr->size;
+        }
+    }
+
+    return found;
+}
+```
+
+---
+
+### Vantaggi/svantaggi
+
+* ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ allocazione della memoria eseguita una volta sola in `init`(riduce interazione con sistema operativo). 
+
+* ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ accesso diretto agli elementi (es: `ins/canc` in coda).
+
+* ( ˘︹˘ ) l'allocazione fatta una volta solo implica dimensione fissata dell'array (max numero elementi).
+
+* ( ˘︹˘ ) la gestione implicata della relazione di successione implica ad esempio che l'inserimento in ordine richieda lo spostamento degli elementi.
+
+---
+
+## Liste collegate
+
+Lista collegata con **array** ed **indici**.
+
+La relazione di successione è codificata in modo esplicito usando degli indici.
+
+![alt text](<Screenshot 2025-11-13 alle 10.04.07.png>)
+
+Variabili di gestione
+
+```c
+struct record{
+    int value;
+    int next;
+}
+
+struct list{
+    struct record *buffer;
+    int free;
+    int first;
+    int size;
+}
+```
+
+---
+
+21/11/25
+
+## Vantaggi/svantaggi lista collegata con array ed indici
+
+* ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ allocazione statica riduce interazione con sistema operativo.
+
+* ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ inserimento in ordine non richiede lo spostamento di elementi.
+
+* ( ˘︹˘ ) allocazione statica della memoria implica dimensione (size) dell'array fissata all'origine.
+
+* ( ˘︹˘ ) Non ho accesso diretto agli elementi.
+
+---
+
+## Lista collegata con puntatori
+
+### Idea:
+
+Gli elementi della lista sono memorizzati in posizioni qualunque della memoria.
+
+* Utilizza un puntatore per collegare un elemento al successore
+
+`{31, 25, 19, 27}`:
+
+![alt text](<Screenshot 2025-11-21 alle 17.31.04.png>)
+
+![alt text](<Screenshot 2025-11-21 alle 17.34.31.png>)
+
+triangolino -> puntatore.
+
+---
+
+```c
+struct list{
+    int value;
+    struct list *next;
+}
+```
+
+---
+
+### Funzione di inizializzazione
+
+```c
+void init(struct list **ptr){
+    *ptr = NULL;
+}
+```
+
+---
+
+### Funzione inserimento in testa
+
+![alt text](<Screenshot 2025-11-21 alle 18.05.19.png>)
+
+```c
+void pre_insert(struct list **ptr, int value)
+{
+    struct list *tmp;
+    tmp = (struct list *)malloc(sizeof(struct list));
+    tmp -> value = value;
+    tmp -> next = *ptr;
+    *ptr = tmp;
+}
+```
+
+---
+
+### Funzione cancellazione in testa
+
+![alt text](<Screenshot 2025-11-21 alle 18.22.29.png>)
+
+![text](<Screenshot 2025-11-21 alle 18.25.06.png>)
+
+---
+
+24/11/25
+
+### Funzione inserimento in coda
+
+![alt text](<Screenshot 2025-11-24 alle 16.29.47.png>)
+
+```c
+void suf_insert(struct list **ptr, int value)
+{
+    /*1*/while(*ptr != NULL)
+    {
+        ptr =&((*ptr)->next);
+    }
+
+    /*2*/pre_insert(ptr, value);
+}
+```
+
+---
+
+### Inserimento in ordine
+
+```c
+void ord_insert(struct list **ptr, int value)
+{
+    while(*ptr != NULL && (*ptr)->value < value)
+    {
+        ptr =& ((*ptr)->next);
+    }
+}
+```
+
+## Esercizio tipo
+
+* Funzione di cancellazione in coda
+
+```c
+int main()
+{
+    struct list *ptr;
+    init(&ptr);
+    pre_insert(&ptr, 5);
+    pre_insert(&ptr, 7);
+    pre_insert(&ptr, 3);
+    //{3, 5, 7}
+
+    //visit(ptr);
+    //pre_consume(&ptr);
+}
+```
+
+---
+
+### Inserimento in testa che usa il valore di ritorno per aggiornare il puntatore alla testa della lista
+
+```c
+struct list *pre_insert_return(struct list *ptr, int value)
+{
+    struct list *tmp;
+    tmp = (struct list*)malloc(sizeof(struct list));
+    tmp->value = value;
+    tmp->next = ptr;
+    return tmp;
+}
+
+int main()
+{
+    struct list *ptr;
+    init($ptr);
+    ptr = pre_insert_return(ptr, 6);
+}
+```
+
+---
+
+### Funzione di clonazione di una lista collegata con puntatori
+
+![alt text](<Screenshot 2025-11-24 alle 17.14.44.png>)
+
+```c
+void clone(struct list *src_ptr, struct list **dst_ptr)
+{
+    init(dst_ptr);
+    while(src_ptr != NULL)
+    {
+        suf_insert(dst_ptr, src_ptr->value);
+        src_ptr = src_ptr->next;
+    }
+}
+```
+
+### Stima num. op. `clone()`
+
+`C = C1 + (S + C1) + (2S + C1) + ... + ((N-1)S + C1)`
+
+`S`= costo per inserire elemento dst_ptr
+
+`C1`= costo per inserire con pre_insert in dst_ptr
+
+`N`= numero elementi src_ptr
