@@ -1260,5 +1260,165 @@ riduce il problema dell'ordinamento alla **ricerca del massimo** ed allo **swap*
 **Codice**:
 
 ```c
+void selection_sort(int *V, int N, int **perm)
+{
+    int iter, count, count_of_max;
 
+    *perm = (int*)malloc(sizeof(int)*N);
+
+    for(count = 0; count < N; count ++)
+    {
+        (*perm)[count]=count;
+    }
+
+    for(iter = 0; iter < N-1, iter++)
+    {
+        for(count = 1; count_of_max = 0; count < N-iter; count++)
+        {
+            if(V[(*perm)[count_of_max]]< V[(*perm)[count]])
+            {
+                count_of_max = count;
+            }
+        }
+
+        swap(*perm, count, count_of_max);
+    }
+}
+
+void swap(int *V, int n1, int n2)
+{
+    int tmp;
+    tmp = V[n1];
+    V[n1] = V[n2];
+    V[n2] = tmp;
+}
 ```
+
+## Bubblesort
+
+**Ordinamento per affioramento a bolla** (bubble sort)
+
+Bubblesort è un algoritmo di ordinamento semplice che ripetutamente attraversa la lista, confronta elementi adiacenti e li scambia se sono nell'ordine sbagliato. L'algoritmo prende il nome dal fatto che gli elementi più grandi "affiorano" verso la fine dell'array, come bolle in acqua.
+
+### Principio
+
+Ad ogni passata, l'algoritmo confronta ogni coppia di elementi adiacenti e li scambia se il primo è maggiore del secondo. Dopo `k` passate complete, i `k` elementi più grandi sono già nelle loro posizioni finali (ordinati) alla fine dell'array.
+
+### Algoritmo (ordinamento crescente)
+
+1. **Passata esterna**: Per `i` da 0 a `n-2`
+2. **Passata interna**: Per `j` da 0 a `n-1-i`
+   - Confronta `A[j]` con `A[j+1]`
+   - Se `A[j] > A[j+1]`, scambia i due elementi
+3. **Ottimizzazione**: Se in una passata non ci sono stati swap, l'array è già ordinato (uscita anticipata)
+
+### Complessità
+
+* **Tempo (caso pessimo)**: O(n²) — quando l'array è ordinato in ordine inverso
+* **Tempo (caso medio)**: O(n²) — nella maggior parte dei casi
+* **Tempo (caso migliore)**: O(n) — quando l'array è già ordinato (con ottimizzazione)
+* **Spazio**: O(1) — ordinamento in place
+* **Numero di confronti**: esattamente `(n-1) + (n-2) + ... + 1 = n(n-1)/2`
+
+### Caratteristiche
+
+- ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ Molto semplice da implementare
+- ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ Non richiede memoria aggiuntiva (in-place)
+- ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ **È stabile** — mantiene l'ordine relativo di elementi uguali
+- ᕙ( ͡❛ ͜ʖ ͡❛)ᕗ Può terminare anticipatamente se l'array diventa ordinato
+- ( ˘︹˘ ) Molto inefficiente per array grandi (O(n²))
+- ( ˘︹˘ ) Peggiore di Selection Sort in pratica (più swap, meno stabile di altri algoritmi)
+
+### Esempio passo-passo: array `[5, 2, 8, 1, 9]`
+
+**Passata 1**: Confronta coppie adiacenti, il massimo (9) affonda in fondo
+- `[5, 2, 8, 1, 9]` confronta 5 e 2 → scambia → `[2, 5, 8, 1, 9]`
+- `[2, 5, 8, 1, 9]` confronta 5 e 8 → no swap → `[2, 5, 8, 1, 9]`
+- `[2, 5, 8, 1, 9]` confronta 8 e 1 → scambia → `[2, 5, 1, 8, 9]`
+- `[2, 5, 1, 8, 9]` confronta 8 e 9 → no swap → `[2, 5, 1, 8, 9]`
+- **Fine passata 1**: `[2, 5, 1, 8, 9]` — 9 è a posto
+
+**Passata 2**: 8 affonda verso la sua posizione (n-2)
+- `[2, 5, 1, 8, 9]` confronta 2 e 5 → no swap
+- `[2, 5, 1, 8, 9]` confronta 5 e 1 → scambia → `[2, 1, 5, 8, 9]`
+- `[2, 1, 5, 8, 9]` confronta 5 e 8 → no swap
+- **Fine passata 2**: `[2, 1, 5, 8, 9]`
+
+**Passata 3**:
+- `[2, 1, 5, 8, 9]` confronta 2 e 1 → scambia → `[1, 2, 5, 8, 9]`
+- `[1, 2, 5, 8, 9]` confronta 2 e 5 → no swap
+- **Fine passata 3**: `[1, 2, 5, 8, 9]`
+
+**Passata 4**:
+- `[1, 2, 5, 8, 9]` — nessun swap, array ordinato!
+
+### Codice C
+
+```c
+// Bubblesort semplice
+void bubble_sort(int *V, int N)
+{
+    int i, j, tmp;
+    
+    for (i = 0; i < N - 1; i++)
+    {
+        for (j = 0; j < N - 1 - i; j++)
+        {
+            if (V[j] > V[j + 1])
+            {
+                // Swap
+                tmp = V[j];
+                V[j] = V[j + 1];
+                V[j + 1] = tmp;
+            }
+        }
+    }
+}
+```
+
+```c
+// Bubblesort con ottimizzazione (uscita anticipata)
+void bubble_sort_optimized(int *V, int N)
+{
+    int i, j, tmp;
+    int swapped;
+    
+    for (i = 0; i < N - 1; i++)
+    {
+        swapped = 0;  // Flag per controllare se c'è stato almeno uno swap
+        
+        for (j = 0; j < N - 1 - i; j++)
+        {
+            if (V[j] > V[j + 1])
+            {
+                tmp = V[j];
+                V[j] = V[j + 1];
+                V[j + 1] = tmp;
+                swapped = 1;
+            }
+        }
+        
+        // Se nessuno swap, l'array è già ordinato
+        if (!swapped)
+            break;
+    }
+}
+```
+
+### Confronto con Selection Sort
+
+| Aspetto | Bubblesort | Selection Sort |
+|---------|-----------|-----------------|
+| **Complessità** | O(n²) in tutti i casi | O(n²) in tutti i casi |
+| **Stabilità** | ✓ Stabile | ✗ Non stabile |
+| **Numero swap** | Molti (peggio) | Pochi (migliore) |
+| **Caso migliore** | O(n) con ottimizzazione | O(n²) sempre |
+| **Pratica** | Lento, evitare | Migliore di bubble, ma ancora lento |
+| **Uso educativo** | Buono per imparare | Buono per imparare confronti/swap |
+
+### Quando usare Bubblesort
+
+- **Da evitare** in produzione per array grandi
+- **Accettabile** per array molto piccoli (< 50 elementi)
+- **Utile** solo a scopo educativo per comprendere algoritmi di ordinamento
+- **Preferire** algoritmi come Quicksort (O(n log n) medio), Mergesort (O(n log n)) o Heapsort (O(n log n)) per usi reali
